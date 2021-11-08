@@ -1273,6 +1273,9 @@ def infer_Tmap_from_multitime_clones_private(
 
     #### Compute the core of the transition map that involve multi-time clones, then extend to other cell states
     if initialization:
+        print(len(clonal_cell_id_t1))
+        print(len(clonal_cell_id_t1))
+        raise "Stop"
         transition_map = adata.uns['init_transition_map']
     else:
         transition_map = np.ones((len(clonal_cell_id_t1), len(clonal_cell_id_t2)))
