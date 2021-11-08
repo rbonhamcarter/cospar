@@ -730,6 +730,7 @@ def infer_Tmap_from_multitime_clones(
     compute_new=False,
     max_iter_N=5,
     epsilon_converge=0.05,
+    initialization=False,
 ):
     """
     Infer transition map for clonal data with multiple time points.
@@ -813,6 +814,9 @@ def infer_Tmap_from_multitime_clones(
         If True, compute Smatrix from scratch, whether it was
         computed and saved before or not. This is activated only when
         `use_full_Smatrix=False`.
+    initialization: `bool`, optional (default: False)
+        If True, use the transition map stored at adata.uns['init_transition_map']
+        as the initialization in place of uniform map.
 
     Returns
     -------
@@ -920,6 +924,7 @@ def infer_Tmap_from_multitime_clones(
             compute_new_Smatrix=compute_new,
             max_iter_N=max_iter_N,
             epsilon_converge=epsilon_converge,
+            initialization=initialization,
         )
 
         if "Smatrix" in adata.uns.keys():
@@ -1048,6 +1053,7 @@ def infer_Tmap_from_multitime_clones_private(
     compute_new_Smatrix=False,
     max_iter_N=5,
     epsilon_converge=0.05,
+    initialization=False,
 ):
     """
     Internal function for Tmap inference from multi-time clonal data.
@@ -1107,6 +1113,9 @@ def infer_Tmap_from_multitime_clones_private(
         If True, compute Smatrix from scratch, whether it was
         computed and saved before or not. This is activated only when
         `use_full_Smatrix=False`.
+    initialization: `bool`, optional (default: False)
+        If True, use the transition map stored at adata.uns['init_transition_map']
+        as the initialization in place of uniform map.
 
     Returns
     -------
@@ -1263,7 +1272,10 @@ def infer_Tmap_from_multitime_clones_private(
         final_similarity_array_ext = adata.uns["Smatrix"]["final_similarity_array_ext"]
 
     #### Compute the core of the transition map that involve multi-time clones, then extend to other cell states
-    transition_map = np.ones((len(clonal_cell_id_t1), len(clonal_cell_id_t2)))
+    if initialization:
+        transition_map = adata.uns['init_transition_map']
+    else:
+        transition_map = np.ones((len(clonal_cell_id_t1), len(clonal_cell_id_t2)))
     # transition_map_array=[transition_map_v1]
 
     X_clone = clone_annot.copy()
