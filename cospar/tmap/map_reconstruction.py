@@ -1011,6 +1011,7 @@ def infer_Tmap_from_multitime_clones(
                 compute_new_Smatrix=compute_new,
                 max_iter_N=max_iter_N,
                 epsilon_converge=epsilon_converge,
+                initialization=initialization
             )
 
             if adata_temp is not None:
@@ -1273,8 +1274,7 @@ def infer_Tmap_from_multitime_clones_private(
 
     #### Compute the core of the transition map that involve multi-time clones, then extend to other cell states
     if initialization:
-        logg.info(len(clonal_cell_id_t1))
-        logg.info(len(clonal_cell_id_t2))
+        logg.info("Using initialization stored at adata.uns['init_transition_map'].")
         transition_map = adata.uns['init_transition_map']
     else:
         transition_map = np.ones((len(clonal_cell_id_t1), len(clonal_cell_id_t2)))
